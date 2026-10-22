@@ -17,18 +17,14 @@ export async function hasBlendUsdcBalance(
 ): Promise<boolean> {
   const issuer = USDC_ISSUER[network];
   if (!issuer) return true;
-  try {
-    const account = await fetchBalances(publicKey, network);
-    if (!account) return true;
-    return account.balances.some(
-      (b) =>
-        b.asset_code === "USDC" &&
-        b.asset_issuer === issuer &&
-        parseFloat(b.balance) > 0
-    );
-  } catch {
-    return true;
-  }
+  const account = await fetchBalances(publicKey, network);
+  if (!account) throw new Error("Unable to check USDC balance");
+  return account.balances.some(
+    (b) =>
+      b.asset_code === "USDC" &&
+      b.asset_issuer === issuer &&
+      parseFloat(b.balance) > 0
+  );
 }
 
 export function useBlendFaucet() {
